@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <sys/types.h> 
 #include <sys/socket.h>
+#include <sys/un.h>
 #include <netinet/in.h>
 
 // Tutorial of basic network programs in C
@@ -21,76 +22,43 @@
 // 4. Accept connections with accept()
 // 5. Send and receive data
 
-void error (char *msg) {
-  perror(msg);
-  exit(1);
-}
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <sys/un.h>
 
-int main (int argc, char *argv[]) {
-  int sockfd, newsockfd, portno;
-  socklen_t clilen;
-  char buffer[256];
-  struct sockaddr_in serv_addr, cli_addr;
-  int n;
+int main() {
+    int server_socket;
+    int client_socket;
+    struct sockaddr_un server_addr;
+    struct sockaddr_un client_addr;
 
-  if (argc < 2) {
-    fprintf(stderr, "ERROR, no port provided\n");
-    exit(1);
-  }
+    int result;
 
-  // AF_INET - stands for address family, internet, specifies the IPv4 address family
-  // SOCK_STREAM - uses TCP
-  // 0 denotes the socket to pick whichever protocol it deems best
-  sockfd = socket(AF_INET, SOCK_STREAM, 0);
-  if (sockfd < 0) {
-    error("error opening socket");
-  }
+    server_socket = socket(AF_UNIX, SOCK_STREAM, 0);
 
-  // sets all values in a buffer to zero; first is a pointer, second size of buffer
-  bzero((char *) &serv_addr, sizeof(serv_addr));
+    server_addr.sun_family = AF_UNIX;
+    strcpy(server_addr.sun_path, "unix_socket");
 
-  // converts port to int
-  portno = atoi(argv[1]);
+    int slen = sizeof(server_addr);
 
-  serv_addr.sin_family = AF_INET;
+    bind(server_socket, (struct sockaddr *) &server_addr, slen);
 
-  // We need to convert the port to network byte order using htons
-  // computer networks use big endian computers; which means
-  // we need to convert the bytes when we send packets
-  // these terms are borrowed from gulliver's travels
-  // htons = host to network short
-  serv_addr.sin_port = htons(portno);
+    listen(server_socket, 5);
 
-  // this field is used to assign the IP address of the host
-  // this is the INADDR_ANY constant
-  serv_addr.sin_addr.s_addr = INADDR_ANY;
+    while(1){
+        char ch;
+        int clen = sizeof(client_addr);
+        client_socket = accept(server_socket, (struct sockaddr *) &client_addr, &clen);
+        read(client_socket, &ch, 1);
+        printf("\nServer: I recieved %c from client!\n", ch);
+        ch++;
+        write(client_socket, &ch, 1);
+        close(client_socket);
+    }
 
-  if (bind(sockfd, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) < 0 {
-    error("ERROR on binding");
-  }
-
-  // we're now listening on the socket for connections
-  // the first arg is the file descriptor
-  // the second arg is the # of connections in the queue (max = 5 in most sys)
-  listen(sockfd, 5);
-
-  clilen = sizeof(cli_addr);
-  newsockfd = accept(sockfd, (struct sockaddr *) &cli_addr, &clilen);
-  if (newsockfd < 0) {
-    error("ERROR on accept");
-  }
-
-  // Reading information from the new socket
-  bzero(buffer, 256);
-
-  // read is a unix command to read from newsockfd into the buffer
-  n = read(newsockfd, buffer, 255);
-  if (n<0) {error("ERROR reading from socket");}
-  printf("Here is the message: %s", buffer);
-
-  // write is a unix command to write the message into newsockfd
-  n = write(newsockfd, "I got your message", 18);
-  if (n<0) { error("ERROR writing to socket");}
-
-  return 0;
+    exit(0);
 }
