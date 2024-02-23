@@ -1,0 +1,3 @@
+/Users/andrescru/Library/CloudStorage/OneDrive-WaltzHealth/Documents/Github/c_playground/pong_game/build/CMakeFiles/pong_game.dir
+/Users/andrescru/Library/CloudStorage/OneDrive-WaltzHealth/Documents/Github/c_playground/pong_game/build/CMakeFiles/edit_cache.dir
+/Users/andrescru/Library/CloudStorage/OneDrive-WaltzHealth/Documents/Github/c_playground/pong_game/build/CMakeFiles/rebuild_cache.dir

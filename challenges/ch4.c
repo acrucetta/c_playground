@@ -21,29 +21,58 @@
 // initialization function that makes parent the singleton partition: that is,
 // the partition where each element is the root of its own private set.
 
+#include <assert.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 
 size_t *parent;
+// Value at parent[i] => parent of element i
 
-void initializeForest(size_t n) {
+void initialize_forest(size_t n);
+size_t find(size_t *parent, size_t i);
+void find_compress(size_t *parent, size_t i);
+void union_set(size_t *parent, size_t x, size_t y);
+
+void initialize_forest(size_t n) {
   parent = (size_t *)malloc(n * sizeof(size_t));
   for (size_t i = 0; i < n; i++) {
-    // Initially, each node is its own parent (root of its own tree)
     parent[i] = i;
   }
 }
 
 // For a given index I find the root of the tree
-void find(){};
-
-// Change all parennt entries on a path to the root (including) to a
-// specific value
-void find_replace(){};
+size_t find(size_t *parent, size_t i) {
+  // We want to iterate starting through the index i
+  // then get to the root of the tree. We return
+  // the final index of where we end up.
+  while (parent[i] != i && parent[i] != SIZE_MAX) {
+    i = parent[i];
+  }
+  return i;
+}
 
 // FindCompress function that changes all parent entries to the root that has
 // been found
-void find_compress(){};
+void find_compress(size_t *parent, size_t i) {
+  size_t root = find(parent, i);
+  while (parent[i] != i) {
+    size_t next = parent[i];
+    parent[i] = root;
+    i = next;
+  }
+};
 
 // Union function that, for two given elements, combines their trees into one.
-void union(){};
+void union_set(size_t *parent, size_t x, size_t y) {
+  size_t root_x = find(parent, x);
+  size_t root_y = find(parent, y);
+  while (root_x != root_y) {
+    parent[root_y] = root_x;
+  }
+}
+
+int main() {
+  initialize_forest(5);
+  return EXIT_SUCCESS;
+}
