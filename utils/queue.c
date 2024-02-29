@@ -13,7 +13,7 @@
 // Queue_peek()
 
 typedef struct QueueNode {
-  int data;
+  void *data;
   struct QueueNode *next;
 } QueueNode;
 
@@ -29,7 +29,7 @@ void init_queue(Queue *q) {
   q->size = 0;
 }
 
-void enqueue(Queue *q, int item) {
+void enqueue(Queue *q, void *item) {
   QueueNode *new_node = (QueueNode *)malloc(sizeof(QueueNode));
   new_node->data = item;
   if (q->size == 0) {
@@ -43,11 +43,11 @@ void enqueue(Queue *q, int item) {
 
 bool is_queue_empty(Queue *q) { return q->size == 0; }
 
-int dequeue(Queue *q) {
+void *dequeue(Queue *q) {
   if (is_queue_empty(q)) {
     return EXIT_FAILURE;
   }
-  int front_val;
+  void *front_val;
   QueueNode *temp = q->front;
   front_val = q->front->data;
   q->front = q->front->next;
@@ -64,26 +64,17 @@ void queue_print(const Queue *q) {
   for (QueueNode *current = q->front; current != NULL;
        current = current->next) {
     if (current->next == NULL) {
-      printf("%d", current->data);
+      printf("%p", current->data);
       break;
     }
-    printf("%d->", current->data);
+    printf("%p->", current->data);
   }
   printf("\n");
 }
 
-int queue_peek(Queue *q) {
+void *queue_peek(Queue *q) {
   if (is_queue_empty(q)) {
     return EXIT_FAILURE;
   }
   return q->front->data;
-}
-
-int main() {
-  Queue q;
-  init_queue(&q);
-  enqueue(&q, 4);
-  enqueue(&q, 4);
-  enqueue(&q, 4);
-  queue_print(&q);
 }

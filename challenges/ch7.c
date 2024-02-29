@@ -6,6 +6,7 @@
 // search in a graph G
 // Can you find connected components?
 // Can you find a spanning tree?
+#include "../utils/queue.h"
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -13,13 +14,17 @@
 
 #define SIZE_M 4
 
-int bfs(bool **A, size_t M, bool *visited, size_t start) {
+int bfs(bool **A, int **G, size_t M, size_t row, size_t col) {
 
-  // Set-up queue
+  Queue q;
+  init_queue(&q);
+  enqueue(&q, start);
 
-  // For each vertex next to the current start
-  // If the vertex wasn't visited and is true,
-  // then keep looking, add them to the queue
+  while (!is_queue_empty(&q)) {
+    size_t current = dequeue(&q);
+    printf("Visited: %zu\n", current);
+  }
+  return EXIT_SUCCESS;
 }
 
 int find_connected_components() { return EXIT_SUCCESS; }
@@ -34,6 +39,9 @@ int main(int argc, char *argv[argc + 1]) {
                             {false, false, false, true},
                             {false, false, false, true},
                             {true, true, true, false}};
+  int G[SIZE_M][SIZE_M] = {
+      {1, 2, 3, 4}, {5, 6, 7, 8}, {9, 10, 11, 12}, {13, 14, 15, 16}};
+
   printf("A:\n");
   for (size_t i = 0; i < SIZE_M; i++) {
     for (size_t j = 0; j < SIZE_M; j++) {
@@ -42,10 +50,6 @@ int main(int argc, char *argv[argc + 1]) {
     printf("\n");
   }
   printf("\n");
-
-  // Do BFS of the graph
-  // Find connected components
-  // Find the spanning tree
 
   return 1;
 }
