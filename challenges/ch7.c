@@ -10,21 +10,70 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
 #define SIZE_M 4
 
-int bfs(bool **A, int **G, size_t M, size_t row, size_t col) {
+int drow[] = {-1, 0, 1, 0};
+int dcol[] = {0, 1, 0, -1};
+
+typedef struct IntPair {
+  int row;
+  int col;
+} IntPair;
+
+void enqueue_intpair(Queue *q, int row, int col) {
+  IntPair *pair = (IntPair *)malloc(sizeof(IntPair));
+  pair->row = row;
+  pair->col = col;
+  enqueue(q, pair);
+}
+
+IntPair *dequeue_intpair(Queue *q) {
+  void *data = dequeue(q);
+  if (data == NULL) {
+    return NULL;
+  }
+  IntPair *pair = (IntPair *)data;
+  return pair;
+}
+
+bool is_valid(bool visited[SIZE_M][SIZE_M], bool **A, int row, int col) {
+  if (row < 0 || col < 0 || row >= SIZE_M || col >= SIZE_M) {
+    return false;
+  }
+  if (visited[row][col]) {
+    return false;
+  }
+
+  if (!A[row][col]) {
+    return false;
+  }
+  return true;
+}
+
+bool **bfs(bool **A, int **G, size_t row, size_t col) {
 
   Queue q;
   init_queue(&q);
-  enqueue(&q, start);
+  enqueue_intpair(&q, row, col);
+
+  bool visited[SIZE_M][SIZE_M] = {0};
+  visited[row][col] = 1;
 
   while (!is_queue_empty(&q)) {
-    size_t current = dequeue(&q);
-    printf("Visited: %zu\n", current);
+    IntPair cell = *dequeue_intpair(&q);
+    int row = cell.row;
+    int col = cell.col;
+    for (int i = 0; i < SIZE_M; i++) {
+      int dx = row + drow[i];
+      int dy = col + dcol[i];
+      if (is_valid(visited, A, dx, dy)) {
+        enqueue_intpair(&q, dx, dy);
+        visited[dx][dy] = 1;
+      }
+    }
   }
-  return EXIT_SUCCESS;
+  return visited;
 }
 
 int find_connected_components() { return EXIT_SUCCESS; }
@@ -32,9 +81,6 @@ int find_spanning_tree() { return EXIT_SUCCESS; }
 
 int main(int argc, char *argv[argc + 1]) {
 
-  // The adjacency matrix of a grap G is a matrix
-  // that holds true or false in element A[i][j] if
-  // there is an arc from node i to node j
   bool A[SIZE_M][SIZE_M] = {{false, false, false, true},
                             {false, false, false, true},
                             {false, false, false, true},
