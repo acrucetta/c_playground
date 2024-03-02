@@ -37,7 +37,7 @@ IntPair *dequeue_intpair(Queue *q) {
   return pair;
 }
 
-bool is_valid(bool visited[SIZE_M][SIZE_M], bool **A, int row, int col) {
+bool is_valid(bool visited[][SIZE_M], bool A[][SIZE_M], int row, int col) {
   if (row < 0 || col < 0 || row >= SIZE_M || col >= SIZE_M) {
     return false;
   }
@@ -51,15 +51,12 @@ bool is_valid(bool visited[SIZE_M][SIZE_M], bool **A, int row, int col) {
   return true;
 }
 
-bool **bfs(bool **A, int **G, size_t row, size_t col) {
-
+int **bfs(const bool A[][SIZE_M], const int G[][SIZE_M], bool visited[][SIZE_M],
+          size_t row, size_t col) {
   Queue q;
   init_queue(&q);
   enqueue_intpair(&q, row, col);
-
-  bool visited[SIZE_M][SIZE_M] = {0};
   visited[row][col] = 1;
-
   while (!is_queue_empty(&q)) {
     IntPair cell = *dequeue_intpair(&q);
     int row = cell.row;
@@ -73,7 +70,7 @@ bool **bfs(bool **A, int **G, size_t row, size_t col) {
       }
     }
   }
-  return visited;
+  return EXIT_SUCCESS;
 }
 
 int find_connected_components() { return EXIT_SUCCESS; }
@@ -81,17 +78,29 @@ int find_spanning_tree() { return EXIT_SUCCESS; }
 
 int main(int argc, char *argv[argc + 1]) {
 
-  bool A[SIZE_M][SIZE_M] = {{false, false, false, true},
-                            {false, false, false, true},
+  bool A[SIZE_M][SIZE_M] = {{true, true, false, true},
+                            {false, true, false, true},
                             {false, false, false, true},
                             {true, true, true, false}};
   int G[SIZE_M][SIZE_M] = {
       {1, 2, 3, 4}, {5, 6, 7, 8}, {9, 10, 11, 12}, {13, 14, 15, 16}};
 
-  printf("A:\n");
+  printf("Adjacency Matrix:\n");
   for (size_t i = 0; i < SIZE_M; i++) {
     for (size_t j = 0; j < SIZE_M; j++) {
       printf("%d ", A[i][j]);
+    }
+    printf("\n");
+  }
+  printf("\n");
+
+  bool visited[SIZE_M][SIZE_M] = {0};
+  bfs(A, G, visited, 0, 0);
+
+  printf("Visited Array:\n");
+  for (size_t i = 0; i < SIZE_M; i++) {
+    for (size_t j = 0; j < SIZE_M; j++) {
+      printf("%d ", visited[i][j]);
     }
     printf("\n");
   }
