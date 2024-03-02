@@ -11,7 +11,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define SIZE_M 4
+#define N 4
 
 int drow[] = {-1, 0, 1, 0};
 int dcol[] = {0, 1, 0, -1};
@@ -37,8 +37,8 @@ IntPair *dequeue_intpair(Queue *q) {
   return pair;
 }
 
-bool is_valid(bool visited[][SIZE_M], bool A[][SIZE_M], int row, int col) {
-  if (row < 0 || col < 0 || row >= SIZE_M || col >= SIZE_M) {
+bool is_valid(bool visited[][N], bool A[][N], int row, int col) {
+  if (row < 0 || col < 0 || row >= N || col >= N) {
     return false;
   }
   if (visited[row][col]) {
@@ -51,8 +51,8 @@ bool is_valid(bool visited[][SIZE_M], bool A[][SIZE_M], int row, int col) {
   return true;
 }
 
-int **bfs(const bool A[][SIZE_M], const int G[][SIZE_M], bool visited[][SIZE_M],
-          size_t row, size_t col) {
+int **bfs(const bool A[static N][N], const int G[static N][N],
+          bool visited[static N][N], size_t row, size_t col) {
   Queue q;
   init_queue(&q);
   enqueue_intpair(&q, row, col);
@@ -61,7 +61,7 @@ int **bfs(const bool A[][SIZE_M], const int G[][SIZE_M], bool visited[][SIZE_M],
     IntPair cell = *dequeue_intpair(&q);
     int row = cell.row;
     int col = cell.col;
-    for (int i = 0; i < SIZE_M; i++) {
+    for (int i = 0; i < N; i++) {
       int dx = row + drow[i];
       int dy = col + dcol[i];
       if (is_valid(visited, A, dx, dy)) {
@@ -73,33 +73,43 @@ int **bfs(const bool A[][SIZE_M], const int G[][SIZE_M], bool visited[][SIZE_M],
   return EXIT_SUCCESS;
 }
 
+// Connected components are a set of vertices in a graph that are connected to
+// each other by paths. In a connected component, there is a path between any
+// pair of vertices. A graph can have one or more connected components. A
+// connected graph has exactly one connected component, consisting of the whole
+// graph. A disconnected graph has two or more connected components.
 int find_connected_components() { return EXIT_SUCCESS; }
+
+// A spanning tree of a graph is a subgraph that is a tree and connects all the
+// vertices together. A single graph can have many different spanning trees.
+// A graph is connected if it has a spanning tree. A graph with n vertices has
+// a spanning tree with n-1 edges. A graph can have many spanning trees. A
+// spanning tree does not have cycles.
 int find_spanning_tree() { return EXIT_SUCCESS; }
 
 int main(int argc, char *argv[argc + 1]) {
 
-  bool A[SIZE_M][SIZE_M] = {{true, true, false, true},
-                            {false, true, false, true},
-                            {false, false, false, true},
-                            {true, true, true, false}};
-  int G[SIZE_M][SIZE_M] = {
-      {1, 2, 3, 4}, {5, 6, 7, 8}, {9, 10, 11, 12}, {13, 14, 15, 16}};
+  bool A[N][N] = {{true, true, false, true},
+                  {false, true, false, true},
+                  {false, false, false, true},
+                  {true, true, true, false}};
+  int G[N][N] = {{1, 2, 3, 4}, {5, 6, 7, 8}, {9, 10, 11, 12}, {13, 14, 15, 16}};
 
   printf("Adjacency Matrix:\n");
-  for (size_t i = 0; i < SIZE_M; i++) {
-    for (size_t j = 0; j < SIZE_M; j++) {
+  for (size_t i = 0; i < N; i++) {
+    for (size_t j = 0; j < N; j++) {
       printf("%d ", A[i][j]);
     }
     printf("\n");
   }
   printf("\n");
 
-  bool visited[SIZE_M][SIZE_M] = {0};
+  bool visited[N][N] = {0};
   bfs(A, G, visited, 0, 0);
 
   printf("Visited Array:\n");
-  for (size_t i = 0; i < SIZE_M; i++) {
-    for (size_t j = 0; j < SIZE_M; j++) {
+  for (size_t i = 0; i < N; i++) {
+    for (size_t j = 0; j < N; j++) {
       printf("%d ", visited[i][j]);
     }
     printf("\n");
