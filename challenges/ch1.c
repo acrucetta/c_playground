@@ -12,39 +12,39 @@ void swap(double *a, double *b);
 int partition(double *arr, int low, int high);
 void quick_sort(double *arr, int low, int high);
 
-int main() {
+// int main() {
 
-  // Declare array
-  double arr[] = {2, 3, 4, 1, 5, 100, 20};
-  size_t arr_length = sizeof(arr) / sizeof(arr[0]);
+//   // Declare array
+//   double arr[] = {2, 3, 4, 1, 5, 100, 20};
+//   size_t arr_length = sizeof(arr) / sizeof(arr[0]);
 
-  // Print the array
-  for (int i = 0; i < arr_length; i++) {
-    printf("\ni=%d - %f", i, arr[i]);
-  }
+//   // Print the array
+//   for (int i = 0; i < arr_length; i++) {
+//     printf("\ni=%d - %f", i, arr[i]);
+//   }
 
-  // Sort with merge sort
-  merge_sort(arr, 0, arr_length);
+//   // Sort with merge sort
+//   merge_sort(arr, 0, arr_length);
 
-  // Print the array
-  printf("\nSorted Array:\n");
-  for (int i = 0; i < arr_length; i++) {
-    printf("\ni=%d - %f", i, arr[i]);
-  }
+//   // Print the array
+//   printf("\nSorted Array:\n");
+//   for (int i = 0; i < arr_length; i++) {
+//     printf("\ni=%d - %f", i, arr[i]);
+//   }
 
-  if (is_array_sorted(arr, arr_length)) {
-    printf("Merge sort works!");
-  };
+//   if (is_array_sorted(arr, arr_length)) {
+//     printf("Merge sort works!");
+//   };
 
-  double arr2[] = {2, 3, 4, 1, 5, 100, 20};
-  size_t arr2_length = sizeof(arr2) / sizeof(arr2[0]);
-  quick_sort(arr2, 0, arr2_length - 1);
-  if (is_array_sorted(arr2, arr2_length)) {
-    printf("Merge sort works!");
-    return EXIT_SUCCESS;
-  };
-  return EXIT_FAILURE;
-}
+//   double arr2[] = {2, 3, 4, 1, 5, 100, 20};
+//   size_t arr2_length = sizeof(arr2) / sizeof(arr2[0]);
+//   quick_sort(arr2, 0, arr2_length - 1);
+//   if (is_array_sorted(arr2, arr2_length)) {
+//     printf("Merge sort works!");
+//     return EXIT_SUCCESS;
+//   };
+//   return EXIT_FAILURE;
+// }
 
 bool is_array_sorted(double *arr, int length) {
   for (int i = 0; i < length - 1; i++) {
