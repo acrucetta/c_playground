@@ -2,7 +2,7 @@
 triple:          'arm64-apple-darwin'
 binary-path:     ch12
 relocations:
-  - { offsetInCU: 0x26, offset: 0x26, size: 0x8, addend: 0x0, symName: _split_text_blob, symObjAddr: 0x0, symBinAddr: 0x100003CC4, symSize: 0x1A0 }
-  - { offsetInCU: 0x7F, offset: 0x7F, size: 0x8, addend: 0x0, symName: _split_text_blob, symObjAddr: 0x0, symBinAddr: 0x100003CC4, symSize: 0x1A0 }
-  - { offsetInCU: 0xE9, offset: 0xE9, size: 0x8, addend: 0x0, symName: _main, symObjAddr: 0x1A0, symBinAddr: 0x100003E64, symSize: 0xB4 }
+  - { offsetInCU: 0x26, offset: 0x26, size: 0x8, addend: 0x0, symName: _split_text_blob, symObjAddr: 0x0, symBinAddr: 0x100003D3C, symSize: 0x128 }
+  - { offsetInCU: 0x7F, offset: 0x7F, size: 0x8, addend: 0x0, symName: _split_text_blob, symObjAddr: 0x0, symBinAddr: 0x100003D3C, symSize: 0x128 }
+  - { offsetInCU: 0xE9, offset: 0xE9, size: 0x8, addend: 0x0, symName: _main, symObjAddr: 0x128, symBinAddr: 0x100003E64, symSize: 0xB4 }
 ...

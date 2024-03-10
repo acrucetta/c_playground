@@ -18,76 +18,111 @@
 #include <stdlib.h>
 #include <string.h>
 
-struct TextBlob {
-  char *string;
-  struct TextBlob *prev;
-  struct TextBlob *next;
+typedef struct Blob Blob;
+
+struct Blob {
+  char *data;
+  struct Blob *prev;
+  struct Blob *next;
 };
 
-void split_text_blob(struct TextBlob *blob, size_t split_point);
-void join_text_blobs(struct TextBlob *blob1, struct TextBlob *blob2);
-void concatenate_text_blobs(struct TextBlob *blob);
-void print_text_blob(struct TextBlob *blob);
+void split_text_blob(struct Blob *blob, size_t split_point);
+void join_text_blobs(struct Blob *blob1, struct Blob *blob2);
+void concatenate_text_blobs(struct Blob *blob);
+void print_text_blob(struct Blob *blob);
+
+Blob *blob_new(const char *src);
+Blob *blob_init(Blob *blob, const char *src);
+
+Blob *blob_new(const char *src) { return blob_init(malloc(sizeof(Blob)), src); }
+
+Blob *blob_init(Blob *blob, const char *src) {
+  if (blob) {
+    if (src) {
+      *blob = (Blob){
+          .data = malloc(sizeof(char[strlen(src) + 1])), .prev = 0, .next = 0};
+    };
+    if (blob->data) {
+      strcpy(blob->data, src);
+    }
+  } else {
+    *blob = (Blob){0};
+  }
+  return blob;
+}
+
+void blob_set_data(Blob *blob, char *src) {
+  if (blob) {
+    free(blob->data);
+    blob->data = malloc(sizeof(char[strlen(src) + 1]));
+    strcpy(blob->data, src);
+  }
+}
+
+void blob_destroy(Blob *blob) {
+  if (blob) {
+    free(blob->data);
+    if (blob->next) {
+      blob->next->prev = blob->prev;
+    }
+    if (blob->prev) {
+      blob->prev->next = blob->next;
+    }
+    blob_init(blob, 0);
+  }
+}
+
+void blob_free(Blob *blob) {
+  blob_destroy(blob);
+  free(blob);
+}
 
 /*
 Splits a [blob] into two instances at the [split_point]
 */
-void split_text_blob(struct TextBlob *blob, size_t split_point) {
+void split_text_blob(struct Blob *blob, size_t split_point) {
 
-  struct TextBlob *blob_1 = (struct TextBlob *)malloc(sizeof(struct TextBlob));
-  struct TextBlob *blob_2 = (struct TextBlob *)malloc(sizeof(struct TextBlob));
+  Blob *split_blob = (struct Blob *)malloc(sizeof(struct Blob));
 
-  int str_len = strlen(blob->string);
-  int half_len = (int)str_len / 2;
+  int str_len = strlen(blob->data);
 
-  blob_1->string = (char *)malloc(split_point + 1);
-  strncpy(blob_1->string, blob->string, split_point);
-  blob_1->string[split_point] = '\0';
+  char *first_half_str = (char *)malloc(split_point + 1);
+  strncpy(first_half_str, blob->data, split_point);
+  first_half_str[split_point] = '\0';
+  blob->data = first_half_str;
 
-  blob_2->string = (char *)malloc(str_len - split_point + 1);
-  strncpy(blob_2->string, &blob->string[split_point], str_len - split_point);
-  blob_2->string[str_len - split_point] = '\0';
+  split_blob->data = (char *)malloc(str_len - split_point + 1);
+  strncpy(split_blob->data, &blob->data[split_point], str_len - split_point);
+  split_blob->data[str_len - split_point] = '\0';
 
-  blob_1->prev = blob->prev;
-  blob_1->next = blob_2;
-
-  blob_2->prev = blob_1;
-  blob_2->next = blob->next;
-
-  if (blob->prev != NULL) {
-    blob->prev->next = blob_1;
-  }
-
-  if (blob->next != NULL) {
-    blob->next->prev = blob_2;
-  }
-
-  // free(blob->string);
-  // free(blob);
+  blob->next = split_blob->prev;
+  split_blob->prev = blob;
+  split_blob->next = blob->next;
 }
 
 int main() {
-  struct TextBlob blob1;
+  Blob blob1;
 
   // Initialize with random text
-  blob1.string = "This is a test";
+  blob1.data = "This is a test";
   blob1.prev = 0;
   blob1.next = 0;
 
   // Add a few more blobs
-  struct TextBlob blob2;
-  blob2.string = "This is another test";
+  Blob blob2;
+  blob2.data = "This is another test";
   blob2.prev = &blob1;
-  struct TextBlob blob3;
-  blob3.string = "This is yet another test";
+
+  Blob blob3;
+  blob3.data = "This is yet another test";
   blob3.prev = &blob2;
 
   blob1.next = &blob2;
   blob2.next = &blob3;
 
-  printf("\nBefore Split %s\n", blob1.string);
+  printf("\nBefore Split %s\n", blob1.data);
   split_text_blob(&blob1, 5);
-  printf("\nAfter Split %s", blob1.string);
+  printf("\nAfter Split %s", blob1.data);
   // join_text_blobs(&blob1, &blob2);
   // concatenate_text_blobs(&blob1);
   // print_text_blob(&blob1);
