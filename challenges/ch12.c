@@ -40,10 +40,11 @@ Blob *blob_init(Blob *blob, const char *src) {
   if (blob) {
     if (src) {
       *blob = (Blob){
-          .data = malloc(sizeof(char[strlen(src) + 1])), .prev = 0, .next = 0};
-    };
+          .data = malloc(sizeof(char[strlen(src) + 1])), .prev = 0, .next = 0
+          };
     if (blob->data) {
       strcpy(blob->data, src);
+    }
     }
   } else {
     *blob = (Blob){0};
@@ -99,6 +100,7 @@ Blob *split_text_blob(Blob *blob, size_t split_point) {
     blob->next->prev = blob2;
     blob->next = blob2;
   }
+
   free(data1);
   free(data2);
 
@@ -106,33 +108,62 @@ Blob *split_text_blob(Blob *blob, size_t split_point) {
 }
 
 Blob *join_text_blobs(Blob *blob1, Blob *blob2) {
-  size_t len1 = strlen(blob1->data);
-  size_t len2 = strlen(blob2->data);
+  if (blob1 && blob2 && blob1->data && blob2->data && blob1->next == blob2 &&
+      blob2->prev == blob1) {
+    size_t len1 = strlen(blob1->data);
+    size_t len2 = strlen(blob2->data);
+    if (len1 && len2) {
+      char *joint_data = malloc(len1 + len2 + 1);
 
-  char *joint_data = malloc(len1 + len2 + 1);
+      strcpy(joint_data, blob1->data);
+      strcpy(joint_data + len1, blob2->data);
 
-  strcpy(joint_data, blob1->data);
-  strcpy(joint_data + len1, blob2->data);
-
-  blob_set_data(blob1, joint_data);
-  blob_destroy(blob2);
+      blob_set_data(blob1, joint_data);
+      blob_destroy(blob2);
+    }
+  }
 
   return blob1;
 }
 
+void blob_print_all(Blob *blob) {
+  while (blob) {
+    printf("%s", blob->data);
+    blob = blob->next;
+  }
+}
+
 int main() {
+  FILE *file = fopen("test.txt", "r");
+  if (!file) {
+    perror("File open failed");
+    return EXIT_FAILURE;
+  }
 
-  // Initialize with random text
-  Blob *blob1 = blob_new("12345");
-  Blob *blob2 = blob_new("678910");
-  Blob *blob3 = blob_new("11-12-13-14-15");
+  char *line = NULL;
+  size_t len = 0;
+  ssize_t read = 0;
+  Blob *head = 0, *tail = 0;
 
-  printf("\nBefore Split %s\n", blob1->data);
-  split_text_blob(blob1, 3);
-  printf("\nAfter Split %s", blob1->data);
+  while ((read = getline(&line, &len, file)) != -1) {
+    Blob *new_blob = blob_new(line);
+    if (new_blob) {
+      if (tail) {
+        tail->next = new_blob;
+        new_blob->prev = tail;
+        tail = new_blob;
+      } else {
+        head = tail = new_blob;
+      }
+    }
+  }
+  // split_text_blob(head, 4);
+  // printf("Split blob %s", head->data);
 
-  Blob *joint_blob = join_text_blobs(blob1, blob2);
-  printf("\nAfter join%s", joint_blob->data);
+  join_text_blobs(head, head->next);
+  printf("Joint blob %s", head->data);
+  // printf("Joint blob %s", head->data);
+  // printf("\nAfter join%s", joint_blob);
   // concatenate_text_blobs(&blob1);
   // print_text_blob(&blob1);
 

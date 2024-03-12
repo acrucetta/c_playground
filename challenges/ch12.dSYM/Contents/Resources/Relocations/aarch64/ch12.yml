@@ -2,13 +2,13 @@
 triple:          'arm64-apple-darwin'
 binary-path:     ch12
 relocations:
-  - { offsetInCU: 0x26, offset: 0x26, size: 0x8, addend: 0x0, symName: _blob_new, symObjAddr: 0x0, symBinAddr: 0x100003A3C, symSize: 0x2C }
-  - { offsetInCU: 0x41, offset: 0x41, size: 0x8, addend: 0x0, symName: _blob_new, symObjAddr: 0x0, symBinAddr: 0x100003A3C, symSize: 0x2C }
-  - { offsetInCU: 0x69, offset: 0x69, size: 0x8, addend: 0x0, symName: _blob_init, symObjAddr: 0x2C, symBinAddr: 0x100003A68, symSize: 0xE0 }
-  - { offsetInCU: 0x9F, offset: 0x9F, size: 0x8, addend: 0x0, symName: _blob_set_data, symObjAddr: 0x10C, symBinAddr: 0x100003B48, symSize: 0x70 }
-  - { offsetInCU: 0xD1, offset: 0xD1, size: 0x8, addend: 0x0, symName: _blob_destroy, symObjAddr: 0x17C, symBinAddr: 0x100003BB8, symSize: 0xAC }
-  - { offsetInCU: 0xF5, offset: 0xF5, size: 0x8, addend: 0x0, symName: _blob_free, symObjAddr: 0x228, symBinAddr: 0x100003C64, symSize: 0x2C }
-  - { offsetInCU: 0x119, offset: 0x119, size: 0x8, addend: 0x0, symName: _split_text_blob, symObjAddr: 0x254, symBinAddr: 0x100003C90, symSize: 0x118 }
-  - { offsetInCU: 0x187, offset: 0x187, size: 0x8, addend: 0x0, symName: _join_text_blobs, symObjAddr: 0x36C, symBinAddr: 0x100003DA8, symSize: 0xA4 }
-  - { offsetInCU: 0x1E7, offset: 0x1E7, size: 0x8, addend: 0x0, symName: _main, symObjAddr: 0x410, symBinAddr: 0x100003E4C, symSize: 0xC8 }
+  - { offsetInCU: 0x26, offset: 0x26, size: 0x8, addend: 0x0, symName: _blob_new, symObjAddr: 0x0, symBinAddr: 0x1000038FC, symSize: 0x2C }
+  - { offsetInCU: 0x41, offset: 0x41, size: 0x8, addend: 0x0, symName: _blob_new, symObjAddr: 0x0, symBinAddr: 0x1000038FC, symSize: 0x2C }
+  - { offsetInCU: 0x69, offset: 0x69, size: 0x8, addend: 0x0, symName: _blob_init, symObjAddr: 0x2C, symBinAddr: 0x100003928, symSize: 0xE0 }
+  - { offsetInCU: 0x9F, offset: 0x9F, size: 0x8, addend: 0x0, symName: _blob_set_data, symObjAddr: 0x10C, symBinAddr: 0x100003A08, symSize: 0x70 }
+  - { offsetInCU: 0xD1, offset: 0xD1, size: 0x8, addend: 0x0, symName: _blob_destroy, symObjAddr: 0x17C, symBinAddr: 0x100003A78, symSize: 0xAC }
+  - { offsetInCU: 0xF5, offset: 0xF5, size: 0x8, addend: 0x0, symName: _blob_free, symObjAddr: 0x228, symBinAddr: 0x100003B24, symSize: 0x2C }
+  - { offsetInCU: 0x119, offset: 0x119, size: 0x8, addend: 0x0, symName: _split_text_blob, symObjAddr: 0x254, symBinAddr: 0x100003B50, symSize: 0x118 }
+  - { offsetInCU: 0x187, offset: 0x187, size: 0x8, addend: 0x0, symName: _join_text_blobs, symObjAddr: 0x36C, symBinAddr: 0x100003C68, symSize: 0x164 }
+  - { offsetInCU: 0x203, offset: 0x203, size: 0x8, addend: 0x0, symName: _main, symObjAddr: 0x4D0, symBinAddr: 0x100003DCC, symSize: 0x144 }
 ...
