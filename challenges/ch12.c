@@ -26,8 +26,8 @@ struct Blob {
   struct Blob *next;
 };
 
-void split_text_blob(struct Blob *blob, size_t split_point);
-void join_text_blobs(struct Blob *blob1, struct Blob *blob2);
+Blob *split_text_blob(struct Blob *blob, size_t split_point);
+Blob *join_text_blobs(struct Blob *blob1, struct Blob *blob2);
 void concatenate_text_blobs(struct Blob *blob);
 void print_text_blob(struct Blob *blob);
 
@@ -80,50 +80,59 @@ void blob_free(Blob *blob) {
 /*
 Splits a [blob] into two instances at the [split_point]
 */
-void split_text_blob(struct Blob *blob, size_t split_point) {
+Blob *split_text_blob(Blob *blob, size_t split_point) {
 
-  Blob *split_blob = (struct Blob *)malloc(sizeof(struct Blob));
+  int len = strlen(blob->data);
 
-  int str_len = strlen(blob->data);
+  char *data1 = malloc(split_point + 1);
+  char *data2 = malloc(len - split_point + 1);
 
-  char *first_half_str = (char *)malloc(split_point + 1);
-  strncpy(first_half_str, blob->data, split_point);
-  first_half_str[split_point] = '\0';
-  blob->data = first_half_str;
+  strncpy(data1, blob->data, split_point);
+  strncpy(data2, blob->data, len - split_point);
 
-  split_blob->data = (char *)malloc(str_len - split_point + 1);
-  strncpy(split_blob->data, &blob->data[split_point], str_len - split_point);
-  split_blob->data[str_len - split_point] = '\0';
+  blob_set_data(blob, data1);
+  Blob *blob2 = blob_new(data2);
+  blob2->prev = blob;
+  blob2->next = blob->next;
 
-  blob->next = split_blob->prev;
-  split_blob->prev = blob;
-  split_blob->next = blob->next;
+  if (blob->next) {
+    blob->next->prev = blob2;
+    blob->next = blob2;
+  }
+  free(data1);
+  free(data2);
+
+  return blob;
+}
+
+Blob *join_text_blobs(Blob *blob1, Blob *blob2) {
+  size_t len1 = strlen(blob1->data);
+  size_t len2 = strlen(blob2->data);
+
+  char *joint_data = malloc(len1 + len2 + 1);
+
+  strcpy(joint_data, blob1->data);
+  strcpy(joint_data + len1, blob2->data);
+
+  blob_set_data(blob1, joint_data);
+  blob_destroy(blob2);
+
+  return blob1;
 }
 
 int main() {
-  Blob blob1;
 
   // Initialize with random text
-  blob1.data = "This is a test";
-  blob1.prev = 0;
-  blob1.next = 0;
+  Blob *blob1 = blob_new("12345");
+  Blob *blob2 = blob_new("678910");
+  Blob *blob3 = blob_new("11-12-13-14-15");
 
-  // Add a few more blobs
-  Blob blob2;
-  blob2.data = "This is another test";
-  blob2.prev = &blob1;
+  printf("\nBefore Split %s\n", blob1->data);
+  split_text_blob(blob1, 3);
+  printf("\nAfter Split %s", blob1->data);
 
-  Blob blob3;
-  blob3.data = "This is yet another test";
-  blob3.prev = &blob2;
-
-  blob1.next = &blob2;
-  blob2.next = &blob3;
-
-  printf("\nBefore Split %s\n", blob1.data);
-  split_text_blob(&blob1, 5);
-  printf("\nAfter Split %s", blob1.data);
-  // join_text_blobs(&blob1, &blob2);
+  Blob *joint_blob = join_text_blobs(blob1, blob2);
+  printf("\nAfter join%s", joint_blob->data);
   // concatenate_text_blobs(&blob1);
   // print_text_blob(&blob1);
 
