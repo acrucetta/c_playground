@@ -40,11 +40,10 @@ Blob *blob_init(Blob *blob, const char *src) {
   if (blob) {
     if (src) {
       *blob = (Blob){
-          .data = malloc(sizeof(char[strlen(src) + 1])), .prev = 0, .next = 0
-          };
-    if (blob->data) {
-      strcpy(blob->data, src);
-    }
+          .data = malloc(sizeof(char[strlen(src) + 1])), .prev = 0, .next = 0};
+      if (blob->data) {
+        strcpy(blob->data, src);
+      }
     }
   } else {
     *blob = (Blob){0};

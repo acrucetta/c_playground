@@ -45,8 +45,36 @@ struct Polynomial {
   double *coefficients;
 };
 
+Polynomial *poly_new(Polynomial *poly, size_t N, double coeff[static N]) {
+  if (poly) {
+    if (coeff) {
+      *poly = (Polynomial){.degree = N,
+                           .coefficients = malloc((N + 1) * sizeof(double))};
+      if (poly->coefficients) {
+        for (size_t i = 0; i <= N; i++) {
+          poly->coefficients[i] = coeff[i];
+        }
+      }
+    }
+  } else {
+    *poly = (Polynomial){0};
+  }
+  return poly;
+}
+
 // Build a function to initialize it
-Polynomial *poly_init(double coef[static MAX_COEFFS]) { return 0; }
+Polynomial *poly_init(size_t N, double coeff[static N]) {
+  return poly_new(malloc(sizeof(Polynomial)), N, coeff);
+}
+
+void print_poly(Polynomial *poly) {
+  for (size_t i = poly->degree; i == 0; i--) {
+    if (i == (poly->degree) - 1) {
+      printf("%g", poly->coefficients[i]);
+    }
+    printf("%gx^%zu+", poly->coefficients[i], i);
+  }
+}
 
 int main() {
   double x = M_PI / 4; // M_PI is defined in <math.h>
@@ -57,6 +85,12 @@ int main() {
   // Finding the roots with newtons method
   double roots = newtons_method(F, x);
   printf("Roots of sin(x) is: %f\n", roots);
+
+  // Creating new polynomial
+  // 2x^2 + 3x + 5
+  double poly[3] = {5.0, 3.0, 2.0};
+  Polynomial *p1 = poly_init(3, poly);
+  print_poly(p1);
 
   return 0;
 }
