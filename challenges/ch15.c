@@ -81,10 +81,42 @@ char *replace_word(char *text, char *word, char *replacement) {
 // For example, find a character class such as [A-Q] or [^0-9], match with
 // * (meaning “anything”), or match with ? (meaning “any character”)
 
-/*
-regex_match finds a [pattern] in [text] and returns a list of matches.
-*/
-void regex_match(char *text, char *pattern) {}
+int match(char *regexp, char *text);
+int matchhere(char *regexp, char *text);
+int matchstar(int c, char *regexp, char *text);
+
+/* match: search for regexp anywhere in text */
+int match(char *regexp, char *text) {
+  if (regexp[0] == '^')
+    return matchhere(regexp + 1, text);
+  do { /* must look even if string is empty */
+    if (matchhere(regexp, text))
+      return 1;
+  } while (*text++ != '\0');
+  return 0;
+}
+
+/* matchhere: search for regexp at beginning of text */
+int matchhere(char *regexp, char *text) {
+  if (regexp[0] == '\0')
+    return 1;
+  if (regexp[1] == '*')
+    return matchstar(regexp[0], regexp + 2, text);
+  if (regexp[0] == '$' && regexp[1] == '\0')
+    return *text == '\0';
+  if (*text != '\0' && (regexp[0] == '.' || regexp[0] == *text))
+    return matchhere(regexp + 1, text + 1);
+  return 0;
+}
+
+/* matchstar: search for c*regexp at beginning of text */
+int matchstar(int c, char *regexp, char *text) {
+  do { /* a * matches zero or more instances */
+    if (matchhere(regexp, text))
+      return 1;
+  } while (*text != '\0' && (*text++ == c || c == '.'));
+  return 0;
+}
 
 int main() {
   char *text = "a cow flies high";
