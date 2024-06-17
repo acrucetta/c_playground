@@ -46,34 +46,36 @@ void *increase_counter(void *arg)
     return NULL;
 }
 
-int main()
+int main(int argc, char *argv[])
 {
-    struct timeval start, end;
-    gettimeofday(&start, NULL);
-    gettimeofday(&end, NULL);
-    long seconds = end.tv_sec - start.tv_sec;
-    long micros = end.tv_usec- start.tv_usec;
-    double elapsed = (double)seconds * 1000000 + micros;
-    printf("Elapsed Time %f\n", elapsed);
+    if (argc<2) {
+        fprintf(stderr, "Usage counter <threads>");
+        exit(1);
+    }
 
+    struct timeval start, end;
     counter_t counter;
+
     init(&counter);
-    increment(&counter);
-    increment(&counter);
-    increment(&counter);
-    int rc = get(&counter);
-    printf("Single thread counter: %i\n", rc);
-    pthread_t p[10];
-    for (size_t i = 0; i < 10; i++)
+    int N_THREADS = atoi(argv[1]);
+    pthread_t p[N_THREADS];
+    gettimeofday(&start, NULL);
+    for (size_t i = 0; i < N_THREADS; i++)
     {
         pthread_create(&p[i], NULL, &increase_counter, &counter);
     }
 
-    for (size_t i = 0; i < 10; i++)
+    for (size_t i = 0; i < N_THREADS; i++)
     {
         pthread_join(p[i], NULL);
     }
+    gettimeofday(&end, NULL);
+    
 
-    int multi_rc = get(&counter);
-    printf("Multi-thread counter: %i\n", multi_rc);
+    long seconds = end.tv_sec - start.tv_sec;
+    long micros = end.tv_usec- start.tv_usec;
+    long elapsed = seconds * 1000000 + micros;
+
+    // Time of day is precise up to nanoseconds.
+    printf("%i\t%ld\n", N_THREADS,elapsed);
 }
