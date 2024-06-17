@@ -138,7 +138,7 @@ void *thread_func(void *arg)
   list_t *list = (list_t *)arg;
   int number = (random() / ((double) RAND_MAX + 1)) * LIST_LENGTH;
   List_Lookup(list, number);
-  return NULL;
+  pthread_exit(EXIT_SUCCESS);
 }
 
 /*

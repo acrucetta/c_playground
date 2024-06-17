@@ -75,7 +75,7 @@ int main(int argc, char *argv[])
     counter_t counter;
     int threshold = 1;
     init(&counter, threshold);
-    int N_THREADS = atoi(argv[1]);
+    size_t N_THREADS = atoi(argv[1]);
     pthread_t p[N_THREADS];
     gettimeofday(&start, NULL);
     for (size_t i = 0; i < N_THREADS; i++)
@@ -95,5 +95,5 @@ int main(int argc, char *argv[])
 
     // Time of day is precise up to nanoseconds.
     int counter_val = get(&counter);
-    printf("%i\t%ld\t%i\n", N_THREADS,elapsed,counter_val);
+    printf("%zu\t%ld\t%i\n", N_THREADS,elapsed,counter_val);
 }
