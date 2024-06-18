@@ -16,7 +16,7 @@ all: $(EXES)
 # Rule to build each executable
 %: %.c
 	$(CC) $(CFLAGS) -o $@ $<
-
+`
 # Clean target
 clean:
 	rm -f $(EXES)
