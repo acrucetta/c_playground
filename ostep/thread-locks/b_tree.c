@@ -31,42 +31,76 @@ Implementations:
 #include <stdlib.h>
 #include <stdio.h>
 
-#define MAX_KEYS 100
+#define MAX_KEYS 10 // Example value; typically 2t-1 for a B-tree of degree t
 
 typedef struct __node_t
 {
+    // degree of tree called t, each node (except root) must have a min of t-1 key
+    int degree;
+    // lower bound: t-1 keys; t children
+    // upper bound: 2t-1 keys; at most 2t children
     int num_keys;
     bool is_leaf;
-    int keys[MAX_KEYS];
-    struct _node_t *children[MAX_KEYS + 1];
+    int *keys;                 // Values in each node
+    struct _node_t **children; // Each node can have up to max_keys + 1 children
 } node_t;
 
-typedef struct node_t *btree;
+typedef struct __node_t *btree;
 
-void btree_init(int min_degree)
+node_t *btree_init(int min_degree)
 {
-    btree *b = (btree *)malloc(sizeof(btree));
+    btree b = (btree)malloc(sizeof(node_t));
     if (b == NULL)
     {
         perror("malloc");
-        return -1;
+        exit(1);
     }
-    b->is_leaf=true;
-    b->num_keys=0;
-    return b;
+    b->is_leaf = true;
+    b->degree = min_degree;
+    b->num_keys = 0;
+
+    int max_keys = 2 * min_degree - 1;
+    b->keys = (int *)malloc(max_keys * sizeof(int));
+    b->children = (node_t **)malloc((max_keys + 1) * sizeof(node_t *));
+    if (b->keys == NULL || b->children == NULL)
+    {
+        perror("malloc");
+        free(b->keys); // Free any allocated memory if allocation fails
+        free(b->children);
+        free(b);
+        exit(1);
+    }
+    for (int i = 0; i < max_keys + 1; i++)
+    {
+        b->children[i] = NULL; 
+    }
+    return b; 
 }
 
 /*
 Find a key
 1. If the key is found in the current node, you're done.
-2. If the key is not found and the node is a leaf, 
+2. If the key is not found and the node is a leaf,
 the key is not in the tree.
-3. If the key is not found and the node is not a leaf, 
+3. If the key is not found and the node is not a leaf,
 you move to the appropriate child node and repeat the process.
 */
-void btree_search(int min_degree)
+node_t *btree_search(btree root, int key)
 {
-    // Init the tree
+    int i = 0;
+    while (i < root->num_keys && key > root->keys[i])
+    {
+        i++;
+    }
+    if (i < MAX_KEYS && key == root->keys[i])
+    {
+        return root;
+    }
+    if (root->is_leaf)
+    {
+        return NULL;
+    }
+    return btree_search(root->children[i], key);
 }
 
 /*
@@ -78,25 +112,46 @@ Insert a new key
     - The middle key of the full node moves up to the parent node.
     - The keys to the left of the middle key form a new left child node.
     - The keys to the right of the middle key form a new right child node.
-- If the parent node is also full, you may need to split the parent node as well, 
+- If the parent node is also full, you may need to split the parent node as well,
 and this process can propagate up to the root, potentially increasing the height of the tree.
 
 */
-void btree_insert(int min_degree)
+void btree_insert(btree root, int key)
 {
-    // Init the tree
+    // Check if the keys are full keys = (2*t) - 1
+    if (root->num_keys == (2*root->degree)-1) {
+        // Create new node
+        // Insert to its children
+        // Split the child at new node 
+        // Insert non-full
+        return NULL;
+    } else 
+    {
+        _insert_non_full(root,key);
+    }
+    return NULL;
+}
+
+void _insert_non_full(btree root, int key)
+{
+    return NULL;
+}
+
+void _split_child(btree root, int key)
+{
+    return NULL;
 }
 
 /*
 Remove a key
 
 - If the key is in a leaf node, simply remove it.
-- If the key is in an internal node, you need to replace it with a suitable 
+- If the key is in an internal node, you need to replace it with a suitable
   key from a leaf node to maintain the B-tree properties:
-    - You can use the predecessor (largest key in the left subtree) or successor 
+    - You can use the predecessor (largest key in the left subtree) or successor
     (smallest key in the right subtree) of the key.
     - After replacing the key, you then delete the predecessor or successor key from the leaf node.
-- If a node has fewer than t keys after deletion, you need to rebalance 
+- If a node has fewer than t keys after deletion, you need to rebalance
 the tree by borrowing keys from sibling nodes or merging nodes.
 
 */
