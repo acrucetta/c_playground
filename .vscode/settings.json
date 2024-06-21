@@ -62,5 +62,6 @@
     "*.sql": "sql",
     "*.yml": "yaml",
     "pthread.h": "c"
-  }
+  },
+  "C_Cpp.errorSquiggles": "enabled"
 }

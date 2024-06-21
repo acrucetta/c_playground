@@ -31,50 +31,36 @@ Implementations:
 #include <stdlib.h>
 #include <stdio.h>
 
-#define MAX_KEYS 10 // Example value; typically 2t-1 for a B-tree of degree t
+#define MAX_CHILDREN 4 // Example value; typically 2t-1 for a B-tree of degree t
+#define MAX_KEYS 3     //
 
 typedef struct __node_t
 {
-    // degree of tree called t, each node (except root) must have a min of t-1 key
-    int degree;
     // lower bound: t-1 keys; t children
     // upper bound: 2t-1 keys; at most 2t children
     int num_keys;
     bool is_leaf;
-    int *keys;                 // Values in each node
-    struct _node_t **children; // Each node can have up to max_keys + 1 children
+    int keys[MAX_CHILDREN - 1];             // Array of keys
+    struct _node_t *children[MAX_CHILDREN]; // Each node can have up to max_keys + 1 children
 } node_t;
 
 typedef struct __node_t *btree;
 
-node_t *btree_init(int min_degree)
+node_t *btree_create_node(bool is_leaf)
 {
     btree b = (btree)malloc(sizeof(node_t));
     if (b == NULL)
     {
         perror("malloc");
-        exit(1);
+        exit(EXIT_FAILURE);
     }
-    b->is_leaf = true;
-    b->degree = min_degree;
+    b->is_leaf = is_leaf;
     b->num_keys = 0;
-
-    int max_keys = 2 * min_degree - 1;
-    b->keys = (int *)malloc(max_keys * sizeof(int));
-    b->children = (node_t **)malloc((max_keys + 1) * sizeof(node_t *));
-    if (b->keys == NULL || b->children == NULL)
+    for (int i = 0; i < MAX_CHILDREN; i++)
     {
-        perror("malloc");
-        free(b->keys); // Free any allocated memory if allocation fails
-        free(b->children);
-        free(b);
-        exit(1);
+        b->children[i] = NULL;
     }
-    for (int i = 0; i < max_keys + 1; i++)
-    {
-        b->children[i] = NULL; 
-    }
-    return b; 
+    return b;
 }
 
 /*
@@ -92,7 +78,7 @@ node_t *btree_search(btree root, int key)
     {
         i++;
     }
-    if (i < MAX_KEYS && key == root->keys[i])
+    if (i < MAX_CHILDREN && key == root->keys[i])
     {
         return root;
     }
@@ -119,32 +105,98 @@ and this process can propagate up to the root, potentially increasing the height
 void btree_insert(btree root, int key)
 {
     // Check if the keys are full keys = (2*t) - 1
-    if (root->num_keys == (2*root->degree)-1) {
-        // Create new node
-        // Insert to its children
-        // Split the child at new node 
-        // Insert non-full
-        return NULL;
-    } else 
+    if (root->num_keys == MAX_KEYS)
     {
-        _insert_non_full(root,key);
+        node_t *new_node = btree_create_node(false);
+        new_node->children[0] = root;    // Set the new node as the root
+        _split_child(root, 0);           // Splits the old root into two nodes
+        _insert_non_full(root, key);     // Insert the key to the root
+        return NULL;
+    }
+    else
+    {
+        _insert_non_full(root, key);
     }
     return NULL;
 }
 
-void _insert_non_full(btree root, int key)
+void _insert_non_full(btree node, int key)
 {
+    int i = node->num_keys - 1;
+    if (node->is_leaf)
+    {
+        // Iterate through the keys until we find the correct part
+        while (i >= 0 && key < node->keys[i])
+        {
+            // shifts the keys right as we iterate through the list
+            node->keys[i + 1] = node->keys[i];
+            i--;
+        }
+        node->keys[i + 1] = key;
+        node->num_keys++;
+    }
+    else
+    {
+        // We need to find the subtree where the key belongs
+        while (i >= 0 && key < node->keys[i])
+        {
+            i--;
+        }
+        // If that child is full we split it.
+        if (node->children[i]->num_keys == MAX_KEYS)
+        {
+            _split_child(node, i);
+            if (key > node->keys[i])
+            {
+                i++;
+            }
+        }
+        // We then keep calling non_full until we hit a leaf
+        _insert_non_full(node->children[i], key);
+    }
     return NULL;
 }
 
-void _split_child(btree root, int key)
+void _split_child(btree x, int i)
 {
-    return NULL;
+    // Step 1: Set up the nodes
+    btree y = x->children[i];
+    btree z = btree_create_node(y->is_leaf);
+
+    // Add to x's list of children
+    x->children[i+1] = z;    
+
+    // Step 2: Move the middle key to the parent
+    int middle_key = y->keys[MAX_KEYS / 2];
+    x->keys[x->num_keys] = middle_key;
+    x->num_keys++;
+
+    // Step 3: Move the right half of the child (y) to the new child (z)
+    int j = 0;
+    for (int i = (MAX_KEYS / 2) + 1; i < MAX_KEYS; i++)
+    {
+        z->keys[j] = y->keys[i];
+        z->num_keys++;
+        j++;
+    }
+
+    // Step 4: If not a leaf, move the corresponding children as well
+    if (!y->is_leaf)
+    {
+        j = 0;
+        for (int i = (MAX_KEYS / 2) + 1; i <= MAX_KEYS; i++)
+        {
+            z->children[j] = y->children[i];
+            j++;
+        }
+    }
+
+    // Step 5: Update the child's key count
+    y->num_keys = MAX_KEYS / 2;
 }
 
 /*
 Remove a key
-
 - If the key is in a leaf node, simply remove it.
 - If the key is in an internal node, you need to replace it with a suitable
   key from a leaf node to maintain the B-tree properties:
@@ -154,6 +206,12 @@ Remove a key
 - If a node has fewer than t keys after deletion, you need to rebalance
 the tree by borrowing keys from sibling nodes or merging nodes.
 
+Case 1: Simply remove from a leaf node
+Case 2a: Internal node, left child has t keys
+Case 2b: Internal node, right child has t keys
+Case 2c: Internal node, both children have t-1 keys
+Case 3a: node has only t-1 keys but sibling has t keys
+Case 3b: node in recursion path has only t-1 keys
 */
 void btree_delete(int min_degree)
 {
