@@ -63,7 +63,8 @@
     "*.yml": "yaml",
     "pthread.h": "c",
     "semaphore.h": "c",
-    "common_threads.h": "c"
+    "common_threads.h": "c",
+    "__mutex_base": "c"
   },
   "C_Cpp.errorSquiggles": "enabled"
 }
