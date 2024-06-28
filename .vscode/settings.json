@@ -61,7 +61,9 @@
     "*.rmd": "markdown",
     "*.sql": "sql",
     "*.yml": "yaml",
-    "pthread.h": "c"
+    "pthread.h": "c",
+    "semaphore.h": "c",
+    "common_threads.h": "c"
   },
   "C_Cpp.errorSquiggles": "enabled"
 }

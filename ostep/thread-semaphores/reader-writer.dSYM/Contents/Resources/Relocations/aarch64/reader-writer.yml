@@ -1,0 +1,18 @@
+---
+triple:          'arm64-apple-darwin'
+binary-path:     reader-writer
+relocations:
+  - { offsetInCU: 0x26, offset: 0x26, size: 0x8, addend: 0x0, symName: _Sem_open, symObjAddr: 0x0, symBinAddr: 0x100003354, symSize: 0xF8 }
+  - { offsetInCU: 0x4D, offset: 0x4D, size: 0x8, addend: 0x0, symName: _value, symObjAddr: 0x1F54, symBinAddr: 0x100008000, symSize: 0x0 }
+  - { offsetInCU: 0x69, offset: 0x69, size: 0x8, addend: 0x0, symName: _loops, symBinAddr: 0x100008020, symSize: 0x0 }
+  - { offsetInCU: 0x7E, offset: 0x7E, size: 0x8, addend: 0x0, symName: _lock, symBinAddr: 0x100008008, symSize: 0x0 }
+  - { offsetInCU: 0xD0, offset: 0xD0, size: 0x8, addend: 0x0, symName: _Sem_open, symObjAddr: 0x0, symBinAddr: 0x100003354, symSize: 0xF8 }
+  - { offsetInCU: 0x114, offset: 0x114, size: 0x8, addend: 0x0, symName: _rwlock_init, symObjAddr: 0xF8, symBinAddr: 0x10000344C, symSize: 0x58 }
+  - { offsetInCU: 0x138, offset: 0x138, size: 0x8, addend: 0x0, symName: _rwlock_acquire_readlock, symObjAddr: 0x150, symBinAddr: 0x1000034A4, symSize: 0x12C }
+  - { offsetInCU: 0x15C, offset: 0x15C, size: 0x8, addend: 0x0, symName: _rwlock_release_readlock, symObjAddr: 0x27C, symBinAddr: 0x1000035D0, symSize: 0x12C }
+  - { offsetInCU: 0x180, offset: 0x180, size: 0x8, addend: 0x0, symName: _rwlock_acquire_writelock, symObjAddr: 0x3A8, symBinAddr: 0x1000036FC, symSize: 0x68 }
+  - { offsetInCU: 0x1A4, offset: 0x1A4, size: 0x8, addend: 0x0, symName: _rwlock_release_writelock, symObjAddr: 0x410, symBinAddr: 0x100003764, symSize: 0x68 }
+  - { offsetInCU: 0x1C8, offset: 0x1C8, size: 0x8, addend: 0x0, symName: _reader, symObjAddr: 0x478, symBinAddr: 0x1000037CC, symSize: 0x94 }
+  - { offsetInCU: 0x1FE, offset: 0x1FE, size: 0x8, addend: 0x0, symName: _writer, symObjAddr: 0x50C, symBinAddr: 0x100003860, symSize: 0xA0 }
+  - { offsetInCU: 0x234, offset: 0x234, size: 0x8, addend: 0x0, symName: _main, symObjAddr: 0x5AC, symBinAddr: 0x100003900, symSize: 0x3DC }
+...

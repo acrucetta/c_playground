@@ -31,6 +31,7 @@ Implementations:
 #include <stdbool.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <pthread.h>
 
 #define MAX_CHILDREN 4 // Example value; typically 2t-1 for a B-tree of degree t
 #define MAX_KEYS 3     //
@@ -43,6 +44,7 @@ typedef struct __node_t
     bool is_leaf;
     int keys[MAX_CHILDREN - 1];             // Array of keys
     struct _node_t *children[MAX_CHILDREN]; // Each node can have up to max_keys + 1 children
+    pthread_mutex_t m;
 } node_t;
 
 typedef struct __node_t *btree;
@@ -144,7 +146,7 @@ void _insert_non_full(btree node, int key)
             i--;
         }
         // If that child is full we split it.
-        if (node->children[i]->num_keys == MAX_KEYS)
+        if (node->children[i].num_keys == MAX_KEYS)
         {
             _split_child(node, i);
             if (key > node->keys[i])

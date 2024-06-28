@@ -1,0 +1,12 @@
+---
+triple:          'arm64-apple-darwin'
+binary-path:     rendezvous
+relocations:
+  - { offsetInCU: 0x26, offset: 0x26, size: 0x8, addend: 0x0, symName: _Sem_open, symObjAddr: 0x0, symBinAddr: 0x1000038AC, symSize: 0xF8 }
+  - { offsetInCU: 0x4D, offset: 0x4D, size: 0x8, addend: 0x0, symName: _s1, symBinAddr: 0x100008000, symSize: 0x0 }
+  - { offsetInCU: 0x74, offset: 0x74, size: 0x8, addend: 0x0, symName: _s2, symBinAddr: 0x100008004, symSize: 0x0 }
+  - { offsetInCU: 0x83, offset: 0x83, size: 0x8, addend: 0x0, symName: _Sem_open, symObjAddr: 0x0, symBinAddr: 0x1000038AC, symSize: 0xF8 }
+  - { offsetInCU: 0xC7, offset: 0xC7, size: 0x8, addend: 0x0, symName: _child_1, symObjAddr: 0xF8, symBinAddr: 0x1000039A4, symSize: 0xE0 }
+  - { offsetInCU: 0xEF, offset: 0xEF, size: 0x8, addend: 0x0, symName: _child_2, symObjAddr: 0x1D8, symBinAddr: 0x100003A84, symSize: 0x90 }
+  - { offsetInCU: 0x117, offset: 0x117, size: 0x8, addend: 0x0, symName: _main, symObjAddr: 0x268, symBinAddr: 0x100003B14, symSize: 0x230 }
+...

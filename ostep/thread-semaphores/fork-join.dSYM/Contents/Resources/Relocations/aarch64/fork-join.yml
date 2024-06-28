@@ -1,0 +1,10 @@
+---
+triple:          'arm64-apple-darwin'
+binary-path:     fork-join
+relocations:
+  - { offsetInCU: 0x26, offset: 0x26, size: 0x8, addend: 0x0, symName: _Sem_open, symObjAddr: 0x0, symBinAddr: 0x100003AE4, symSize: 0xF8 }
+  - { offsetInCU: 0x4D, offset: 0x4D, size: 0x8, addend: 0x0, symName: _s, symBinAddr: 0x100008000, symSize: 0x0 }
+  - { offsetInCU: 0x6E, offset: 0x6E, size: 0x8, addend: 0x0, symName: _Sem_open, symObjAddr: 0x0, symBinAddr: 0x100003AE4, symSize: 0xF8 }
+  - { offsetInCU: 0xB2, offset: 0xB2, size: 0x8, addend: 0x0, symName: _child, symObjAddr: 0xF8, symBinAddr: 0x100003BDC, symSize: 0x7C }
+  - { offsetInCU: 0xDA, offset: 0xDA, size: 0x8, addend: 0x0, symName: _main, symObjAddr: 0x174, symBinAddr: 0x100003C58, symSize: 0x1B0 }
+...
