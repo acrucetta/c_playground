@@ -1,0 +1,15 @@
+---
+triple:          'arm64-apple-darwin'
+binary-path:     muns
+relocations:
+  - { offsetInCU: 0x26, offset: 0x26, size: 0x8, addend: 0x0, symName: _Sem_open, symObjAddr: 0x0, symBinAddr: 0x1000033D8, symSize: 0xF8 }
+  - { offsetInCU: 0x4D, offset: 0x4D, size: 0x8, addend: 0x0, symName: _value, symObjAddr: 0x1C84, symBinAddr: 0x100008000, symSize: 0x0 }
+  - { offsetInCU: 0x69, offset: 0x69, size: 0x8, addend: 0x0, symName: _loops, symBinAddr: 0x100008028, symSize: 0x0 }
+  - { offsetInCU: 0x7E, offset: 0x7E, size: 0x8, addend: 0x0, symName: _lock, symBinAddr: 0x100008008, symSize: 0x0 }
+  - { offsetInCU: 0xE8, offset: 0xE8, size: 0x8, addend: 0x0, symName: _Sem_open, symObjAddr: 0x0, symBinAddr: 0x1000033D8, symSize: 0xF8 }
+  - { offsetInCU: 0x12C, offset: 0x12C, size: 0x8, addend: 0x0, symName: _ns_mutex_init, symObjAddr: 0xF8, symBinAddr: 0x1000034D0, symSize: 0x84 }
+  - { offsetInCU: 0x150, offset: 0x150, size: 0x8, addend: 0x0, symName: _ns_mutex_acquire, symObjAddr: 0x17C, symBinAddr: 0x100003554, symSize: 0x328 }
+  - { offsetInCU: 0x174, offset: 0x174, size: 0x8, addend: 0x0, symName: _ns_mutex_release, symObjAddr: 0x4A4, symBinAddr: 0x10000387C, symSize: 0xD4 }
+  - { offsetInCU: 0x198, offset: 0x198, size: 0x8, addend: 0x0, symName: _worker, symObjAddr: 0x578, symBinAddr: 0x100003950, symSize: 0x70 }
+  - { offsetInCU: 0x1CE, offset: 0x1CE, size: 0x8, addend: 0x0, symName: _main, symObjAddr: 0x5E8, symBinAddr: 0x1000039C0, symSize: 0x350 }
+...
