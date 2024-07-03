@@ -1,4 +1,4 @@
-#include <stdio.h>
+// #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <pthread.h>
@@ -91,7 +91,7 @@ int main(int argc, char *argv[])
     for (i = 0; i < workers; i++)
         Pthread_join(pr[i], NULL);
 
-    printf("end: value %d\n", value);
+    printf("counter: %i\n", value);
     Sem_close(lock.mutex);
     Sem_close(lock.t1);
     Sem_close(lock.t2);
