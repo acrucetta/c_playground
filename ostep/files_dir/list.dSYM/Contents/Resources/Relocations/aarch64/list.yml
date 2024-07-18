@@ -1,0 +1,11 @@
+---
+triple:          'arm64-apple-darwin'
+binary-path:     list
+relocations:
+  - { offsetInCU: 0x26, offset: 0x26, size: 0x8, addend: 0x0, symName: _print_usage, symObjAddr: 0x0, symBinAddr: 0x100003BC0, symSize: 0x1C }
+  - { offsetInCU: 0x48, offset: 0x48, size: 0x8, addend: 0x0, symName: _print_usage, symObjAddr: 0x0, symBinAddr: 0x100003BC0, symSize: 0x1C }
+  - { offsetInCU: 0x5D, offset: 0x5D, size: 0x8, addend: 0x0, symName: _print_file_info, symObjAddr: 0x1C, symBinAddr: 0x100003BDC, symSize: 0xB8 }
+  - { offsetInCU: 0x9D, offset: 0x9D, size: 0x8, addend: 0x0, symName: _print_directory, symObjAddr: 0xD4, symBinAddr: 0x100003C94, symSize: 0xA0 }
+  - { offsetInCU: 0xEB, offset: 0xEB, size: 0x8, addend: 0x0, symName: _is_valid_dir, symObjAddr: 0x174, symBinAddr: 0x100003D34, symSize: 0xC }
+  - { offsetInCU: 0x104, offset: 0x104, size: 0x8, addend: 0x0, symName: _main, symObjAddr: 0x180, symBinAddr: 0x100003D40, symSize: 0x184 }
+...
