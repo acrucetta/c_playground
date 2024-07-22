@@ -15,6 +15,12 @@
 // the file to print. Useful interfaces: stat(), lseek(), open(), read(),
 // close().
 
+#define handle_error(msg)                                                      \
+  do {                                                                         \
+    perror(msg);                                                               \
+    exit(EXIT_FAILURE);                                                        \
+  } while (0)
+
 void print_usage() { printf("Usage: tail -<num lines> <file>\n"); }
 
 int main(int argc, char *argv[]) {
@@ -27,17 +33,47 @@ int main(int argc, char *argv[]) {
   struct stat file_info;
 
   if ((fd = open(path, O_RDONLY)) == -1) {
-    perror("open");
+    handle_error("open");
   }
   if ((stat(path, &file_info)) == -1) {
-    perror("stat");
+    handle_error("stat");
+  }
+  if (lseek(fd, -1, SEEK_END) == -1) {
+    handle_error("lseek");
+  }
+  char *tiny_buffer[1];
+  int offset;
+  while (lines>0) {
+      if (read(fd, tiny_buffer, 1) == -1) {
+          handle_error("read");
+      }
+      if (tiny_buffer[0] == '\n') {
+          lines--;
+      }
+      offset = lseek(fd, -2, SEEK_CUR);
+      if (offset==-1) {
+        break;
+      }
+  }
+
+  printf("Filled up buffer:\n%s",tiny_buffer);
+  if (offset>0 || lines ==0) {
+      if (lseek(fd, 2, SEEK_CUR) == -1) {
+          handle_error("lseek");
+      }
+  } else {
+      if (lseek(fd,0, SEEK_SET) == -1) {
+          handle_error("lseek");
+      }
   }
 
   char *buffer[file_info.st_size];
-
-  // Create buffer with st_size
-  // Seek to the end of the file
-  // Read its contents line by line and add them to the buffer, then backtrack
-  // Add as many as N lines to the file
-  // Close the file
+  memset(buffer,0,file_info.st_size);
+  printf("Empty buffer:\n%s",buffer);
+  if (read(fd, buffer, file_info.st_size) == -1) {
+      handle_error("read");
+  }
+  printf("Full Buffer:\n%s", buffer);
+  close(fd);
+  exit(EXIT_SUCCESS);
 }
