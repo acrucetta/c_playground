@@ -28,6 +28,7 @@ int main(int argc, char *argv[]) {
     print_usage();
   }
   int lines = atoi(argv[1] + 1);
+  lines++;
   char *path = argv[2];
   int fd;
   struct stat file_info;
