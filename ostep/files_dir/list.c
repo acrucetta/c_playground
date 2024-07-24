@@ -44,12 +44,11 @@ void print_file_info(const char *path, bool verbose) {
       printf("%s\t\t", path);
       printf("size: %lld bytes\t", (long long)file_stat.st_size);
       printf("permissions: %o\t\n", file_stat.st_mode & 0777);
-    }
-    else {
-        printf("%s\n",path);
+    } else {
+      printf("%s\n", path);
     }
   } else {
-      perror("stat");
+    perror("stat");
   }
 }
 
